@@ -1,0 +1,36 @@
+<nav class="navbar navbar-expand-lg navbar-dark navbar-itm sticky-top">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+      <span class="fw-bold fs-5 tracking-wide">ITM</span>
+      <span class="navbar-brand-badge">Guía 3 - Auth0</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link text-white" href="/">Inicio</a>
+        </li>
+        <% if (isAuthenticated) { %>
+          <li class="nav-item">
+            <a class="nav-link text-white fw-semibold" href="/perfil">Modificar Datos (user_metadata)</a>
+          </li>
+        <% } %>
+      </ul>
+      <div class="d-flex align-items-center gap-3">
+        <% if (isAuthenticated) { %>
+          <div class="d-flex align-items-center gap-2 text-white">
+            <% if (user && user.picture) { %>
+              <img src="<%= user.picture %>" alt="<%= user.name %>" class="rounded-circle border border-2 border-white" width="34" height="34">
+            <% } %>
+            <span class="small fw-semibold d-none d-sm-inline"><%= user.name || user.email %></span>
+          </div>
+          <a href="/logout" class="btn btn-outline-light btn-sm px-3">Cerrar Sesión</a>
+        <% } else { %>
+          <a href="/login" class="btn btn-light btn-sm px-4 fw-semibold text-primary">Iniciar Sesión</a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</nav>

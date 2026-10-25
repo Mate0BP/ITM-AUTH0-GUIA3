@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ITM - Configuración Inicial de Auth0</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="navbar navbar-dark navbar-itm">
+    <div class="container">
+      <span class="navbar-brand fw-bold">ITM &bull; Guía 3 - Asistente de Configuración</span>
+      <span class="badge bg-warning text-dark px-3 py-2 fw-semibold">Paso Requerido: Configurar .env</span>
+    </div>
+  </nav>
+
+  <main class="py-5">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-9">
+
+          <div class="card card-custom p-4 p-md-5 mb-4 border-warning border-top border-4">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <i class="bi bi-gear-wide-connected text-primary display-5"></i>
+              <div>
+                <h2 class="h3 fw-bold mb-1">Casi listo: Conectá tu aplicación con Auth0</h2>
+                <p class="text-muted mb-0">El servidor Node.js está corriendo, pero faltan tus credenciales en el archivo <code>.env</code>.</p>
+              </div>
+            </div>
+
+            <hr class="my-4">
+
+            <h5 class="fw-bold text-dark mb-3">
+              <i class="bi bi-1-circle-fill text-primary me-2"></i>Paso 1: Crear la Aplicación Web en Auth0 (para el Login)
+            </h5>
+            <ol class="small text-secondary mb-4 lh-lg">
+              <li>Ingresá a tu consola de <a href="https://manage.auth0.com" target="_blank" class="fw-bold">Auth0 Dashboard</a>.</li>
+              <li>Andá a <strong>Applications &gt; Applications</strong> y hacé clic en <strong>Create Application</strong>.</li>
+              <li>Elegí un nombre (ej. <code>ITM App Guia 3</code>) y seleccioná el tipo <strong>Regular Web Applications</strong>.</li>
+              <li>En la pestaña <strong>Settings</strong>, bajá hasta <em>Application URIs</em> y configurá:
+                <ul>
+                  <li><strong>Allowed Callback URLs:</strong> <code>http://localhost:3000/callback</code></li>
+                  <li><strong>Allowed Logout URLs:</strong> <code>http://localhost:3000</code></li>
+                </ul>
+              </li>
+              <li>Guardá los cambios al final de la página (<strong>Save Changes</strong>).</li>
+              <li>Copiá el <strong>Domain</strong>, <strong>Client ID</strong> y <strong>Client Secret</strong>.</li>
+            </ol>
+
+            <h5 class="fw-bold text-dark mb-3">
+              <i class="bi bi-2-circle-fill text-primary me-2"></i>Paso 2: Configurar la Management API (para user_metadata)
+            </h5>
+            <ol class="small text-secondary mb-4 lh-lg">
+              <li>En el menú lateral de Auth0, andá a <strong>Applications &gt; APIs</strong>.</li>
+              <li>Hacé clic en <strong>Auth0 Management API</strong>.</li>
+              <li>Andá a la pestaña <strong>API Explorer</strong> o <strong>Machine to Machine Applications</strong>.</li>
+              <li>Activá la aplicación (Authorized) y desplegá los permisos (Scopes) para marcar:
+                <span class="badge bg-primary me-1">read:users</span>
+                <span class="badge bg-primary">update:users</span>
+              </li>
+              <li>Hacé clic en <strong>Update</strong> / <strong>Save</strong>.</li>
+              <li>Copiá el <strong>Client ID</strong> y <strong>Client Secret</strong> de esa aplicación M2M (o de la pestaña <em>API Explorer</em>).</li>
+            </ol>
+
+            <h5 class="fw-bold text-dark mb-3">
+              <i class="bi bi-3-circle-fill text-primary me-2"></i>Paso 3: Pegar los valores en tu archivo <code>.env</code>
+            </h5>
+            <p class="small text-muted mb-2">Abrí el archivo <code>.env</code> en el proyecto y completá los campos:</p>
+            <div class="bg-dark p-3 rounded-3 text-light font-monospace small mb-4">
+              PORT=3000<br>
+              AUTH0_SECRET=7f9b8c6e5d4a3b2c1d0e9f8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b8c<br>
+              AUTH0_BASE_URL=http://localhost:3000<br>
+              AUTH0_CLIENT_ID=<span class="text-warning">tu_client_id_aqui</span><br>
+              AUTH0_CLIENT_SECRET=<span class="text-warning">tu_client_secret_aqui</span><br>
+              AUTH0_ISSUER_BASE_URL=https://<span class="text-warning">tu-tenant.us.auth0.com</span><br>
+              <br>
+              AUTH0_M2M_CLIENT_ID=<span class="text-info">tu_m2m_client_id_aqui</span><br>
+              AUTH0_M2M_CLIENT_SECRET=<span class="text-info">tu_m2m_client_secret_aqui</span>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="small text-muted">Una vez guardado el archivo <code>.env</code>, reiniciá o recargá esta página.</span>
+              <button onclick="window.location.reload()" class="btn btn-itm">
+                <i class="bi bi-arrow-clockwise me-1"></i> Ya guardé el .env, Recargar
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <%- include('partials/footer') %>

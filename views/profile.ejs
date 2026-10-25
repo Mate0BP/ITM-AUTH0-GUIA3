@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ITM - Modificar Datos de Usuario (user_metadata)</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <%- include('partials/navbar') %>
+
+  <main class="py-5">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+          <!-- Alerta de éxito -->
+          <% if (typeof actualizado !== 'undefined' && actualizado) { %>
+            <div class="alert alert-success alert-dismissible fade show d-flex align-items-center gap-3 p-3 shadow-sm rounded-3 mb-4" role="alert">
+              <i class="bi bi-check-circle-fill fs-3 text-success"></i>
+              <div>
+                <strong class="d-block">¡Información actualizada con éxito!</strong>
+                <span class="small">Los cambios se enviaron y almacenaron en la propiedad <code>user_metadata</code> de Auth0 mediante la Management API.</span>
+              </div>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+            </div>
+          <% } %>
+
+          <!-- Alerta de error -->
+          <% if (typeof error !== 'undefined' && error) { %>
+            <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center gap-3 p-3 shadow-sm rounded-3 mb-4" role="alert">
+              <i class="bi bi-exclamation-triangle-fill fs-3 text-danger"></i>
+              <div>
+                <strong class="d-block">Error al procesar la solicitud</strong>
+                <span class="small"><%= error %></span>
+              </div>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+            </div>
+          <% } %>
+
+          <!-- Tarjeta de Perfil / Formulario -->
+          <div class="card card-custom mb-4 overflow-hidden">
+            <div class="card-header-itm d-flex justify-content-between align-items-center flex-wrap gap-2">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-person-vcard fs-4 text-primary"></i>
+                <h5 class="mb-0 fw-bold">Modificación de Datos Personales</h5>
+              </div>
+              <span class="badge-metadata">
+                <i class="bi bi-cloud-arrow-up me-1"></i> Sincronizado con Auth0
+              </span>
+            </div>
+
+            <div class="card-body p-4">
+              <!-- Información de la sesión Auth0 -->
+              <div class="p-3 bg-light rounded-3 mb-4 border d-flex align-items-center gap-3 flex-wrap">
+                <% if (user && user.picture) { %>
+                  <img src="<%= user.picture %>" alt="<%= user.name %>" class="rounded-circle border" width="56" height="56">
+                <% } %>
+                <div class="flex-grow-1">
+                  <h6 class="mb-0 fw-bold"><%= user.name || 'Usuario Auth0' %></h6>
+                  <p class="mb-0 text-muted small"><%= user.email %></p>
+                  <code class="small text-secondary" style="font-size: 0.78rem;">ID Auth0 (sub): <%= user.sub %></code>
+                </div>
+              </div>
+
+              <!-- Indicador de estado de metadata inicial -->
+              <% const tieneDatos = metadata && (metadata.tipo_documento || metadata.numero_documento || metadata.direccion || metadata.telefono); %>
+              <% if (!tieneDatos) { %>
+                <div class="alert alert-info py-2 px-3 small d-flex align-items-center gap-2 mb-4">
+                  <i class="bi bi-info-circle-fill"></i>
+                  <span>Tu cuenta aún no tiene datos registrados en <code>user_metadata</code>. Por favor diligencialos a continuación:</span>
+                </div>
+              <% } else { %>
+                <div class="alert alert-light border py-2 px-3 small d-flex align-items-center gap-2 mb-4 text-muted">
+                  <i class="bi bi-check2-all text-success fs-5"></i>
+                  <span>Los campos a continuación fueron prellenados con tus datos guardados en Auth0:</span>
+                </div>
+              <% } %>
+
+              <!-- Formulario de actualización requerido por la Guía 3 -->
+              <form action="/perfil" method="POST">
+                
+                <!-- 1. Tipo de documento -->
+                <div class="mb-3">
+                  <label for="tipo_documento" class="form-label fw-semibold">
+                    1. Tipo de Documento <span class="text-danger">*</span>
+                  </label>
+                  <select class="form-select form-select-lg fs-6" id="tipo_documento" name="tipo_documento" required>
+                    <option value="" disabled <%= (!metadata || !metadata.tipo_documento) ? 'selected' : '' %>>-- Seleccioná un tipo de documento --</option>
+                    <option value="Cédula de Ciudadanía (CC)" <%= (metadata && metadata.tipo_documento === 'Cédula de Ciudadanía (CC)') ? 'selected' : '' %>>Cédula de Ciudadanía (CC)</option>
+                    <option value="Tarjeta de Identidad (TI)" <%= (metadata && metadata.tipo_documento === 'Tarjeta de Identidad (TI)') ? 'selected' : '' %>>Tarjeta de Identidad (TI)</option>
+                    <option value="Cédula de Extranjería (CE)" <%= (metadata && metadata.tipo_documento === 'Cédula de Extranjería (CE)') ? 'selected' : '' %>>Cédula de Extranjería (CE)</option>
+                    <option value="Pasaporte" <%= (metadata && metadata.tipo_documento === 'Pasaporte') ? 'selected' : '' %>>Pasaporte</option>
+                  </select>
+                </div>
+
+                <!-- 2. Número de documento -->
+                <div class="mb-3">
+                  <label for="numero_documento" class="form-label fw-semibold">
+                    2. Número de Documento <span class="text-danger">*</span>
+                  </label>
+                  <input 
+                    type="text" 
+                    class="form-control form-control-lg fs-6" 
+                    id="numero_documento" 
+                    name="numero_documento" 
+                    placeholder="Ej. 1020304050" 
+                    value="<%= (metadata && metadata.numero_documento) ? metadata.numero_documento : '' %>" 
+                    required
+                  >
+                </div>
+
+                <!-- 3. Dirección -->
+                <div class="mb-3">
+                  <label for="direccion" class="form-label fw-semibold">
+                    3. Dirección de Residencia <span class="text-danger">*</span>
+                  </label>
+                  <input 
+                    type="text" 
+                    class="form-control form-control-lg fs-6" 
+                    id="direccion" 
+                    name="direccion" 
+                    placeholder="Ej. Calle 73 No. 76A - 354" 
+                    value="<%= (metadata && metadata.direccion) ? metadata.direccion : '' %>" 
+                    required
+                  >
+                </div>
+
+                <!-- 4. Teléfono -->
+                <div class="mb-4">
+                  <label for="telefono" class="form-label fw-semibold">
+                    4. Teléfono de Contacto <span class="text-danger">*</span>
+                  </label>
+                  <input 
+                    type="tel" 
+                    class="form-control form-control-lg fs-6" 
+                    id="telefono" 
+                    name="telefono" 
+                    placeholder="Ej. 3001234567 o (604) 4405100" 
+                    value="<%= (metadata && metadata.telefono) ? metadata.telefono : '' %>" 
+                    required
+                  >
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="d-flex justify-content-between align-items-center pt-2">
+                  <a href="/" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1"></i> Regresar
+                  </a>
+                  <button type="submit" class="btn btn-itm btn-lg">
+                    <i class="bi bi-floppy-fill me-2"></i> Guardar en user_metadata
+                  </button>
+                </div>
+
+              </form>
+            </div>
+          </div>
+
+          <!-- Visor en Tiempo Real de user_metadata (Para evidencia del informe) -->
+          <div class="card card-custom p-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h6 class="fw-bold mb-0 text-dark">
+                <i class="bi bi-code-slash text-primary me-2"></i>
+                Evidencia de la API: <code>user_metadata</code> en Auth0
+              </h6>
+              <span class="badge bg-secondary-subtle text-secondary border">JSON en vivo</span>
+            </div>
+            <p class="small text-muted mb-3">
+              Este bloque muestra la carga útil devuelta directamente por la Management API de Auth0 para tu usuario:
+            </p>
+            <pre class="json-viewer mb-0"><code><%= JSON.stringify(metadata || {}, null, 2) %></code></pre>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <%- include('partials/footer') %>

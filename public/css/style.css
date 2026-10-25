@@ -1,0 +1,109 @@
+:root {
+  --itm-primary: #003865;
+  --itm-primary-hover: #002646;
+  --itm-accent: #008eb0;
+  --itm-light: #f4f7fb;
+  --itm-dark: #1b263b;
+}
+
+body {
+  background-color: var(--itm-light);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--itm-dark);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+.navbar-itm {
+  background: linear-gradient(135deg, var(--itm-primary) 0%, #004b87 100%);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand-badge {
+  background: rgba(255, 255, 255, 0.18);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #fff;
+}
+
+.card-custom {
+  border: none;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0, 56, 101, 0.08);
+  background: #ffffff;
+}
+
+.card-header-itm {
+  background-color: #ffffff;
+  border-bottom: 2px solid #e9ecef;
+  padding: 1.25rem 1.5rem;
+  font-weight: 700;
+  color: var(--itm-primary);
+}
+
+.btn-itm {
+  background-color: var(--itm-primary);
+  color: #ffffff;
+  border: none;
+  font-weight: 600;
+  padding: 0.6rem 1.3rem;
+  border-radius: 8px;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-itm:hover {
+  background-color: var(--itm-primary-hover);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 56, 101, 0.25);
+}
+
+.btn-itm-outline {
+  border: 2px solid var(--itm-primary);
+  color: var(--itm-primary);
+  font-weight: 600;
+  border-radius: 8px;
+}
+
+.btn-itm-outline:hover {
+  background-color: var(--itm-primary);
+  color: #ffffff;
+}
+
+.badge-metadata {
+  background-color: #e3f2fd;
+  color: #0d47a1;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+}
+
+.json-viewer {
+  background-color: #1e1e2f;
+  color: #76e0a3;
+  border-radius: 8px;
+  padding: 1rem;
+  font-family: "Fira Code", Consolas, Monaco, monospace;
+  font-size: 0.88rem;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.footer-itm {
+  background-color: #ffffff;
+  border-top: 1px solid #e9ecef;
+  color: #6c757d;
+  font-size: 0.9rem;
+  padding: 1.5rem 0;
+  margin-top: auto;
+}
